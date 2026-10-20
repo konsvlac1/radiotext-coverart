@@ -1,7 +1,7 @@
 var pluginConfig = {
     name: 'RadioText Cover Art',
-    version: '1.3.1',
-    author: 'istvn',
+    version: '2.1',
+    author: 'istvn (v2.0 additions: bvlachos)',
     frontEndPath: 'radiotext-coverart/radiotext-coverart.js'
 }
 
