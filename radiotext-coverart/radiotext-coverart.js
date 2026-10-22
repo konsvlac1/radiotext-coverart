@@ -1,9 +1,9 @@
 /* global $ */
-// RadioText Cover Art — front-end (v2.2)
+// RadioText Cover Art — front-end (v2.2.1)
 
 (function () {
 
-    const VERSION = '2.2';
+    const VERSION = '2.2.1';
 
     // ---------------------------------------------------------------
     // Fixed settings (not offered in the ♫ panel)
@@ -413,7 +413,7 @@
                 /* Phones: RadioText moved up under the station name (placePhoneRt) */
                 @media only screen and (max-width: 768px) {
                     .rt-ca-rt-top #rt-container {
-                        margin: 12px auto 0 auto !important;
+                        margin: 12px auto 24px auto !important;
                         padding: 6px 12px;
                         box-sizing: border-box;
                         min-height: 0;
@@ -421,7 +421,7 @@
                         backdrop-filter: blur(5px);
                     }
                     .rt-ca-rt-top #rt-container.rt-ca-rt-empty { display: none !important; }
-                    .rt-ca-rt-top #rt-container h2 { display: none; }
+                    .rt-ca-rt-top #rt-container h2, .rt-ca-rt-top #rt-container > hr { display: none; }
                     .rt-ca-rt-top #data-rt0, .rt-ca-rt-top #data-rt1 {
                         font-size: 14px;
                         line-height: 1.35;
