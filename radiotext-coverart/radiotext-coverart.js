@@ -1,9 +1,9 @@
 /* global $ */
-// RadioText Cover Art — front-end (v2.2.2)
+// RadioText Cover Art — front-end (v2.2.3)
 
 (function () {
 
-    const VERSION = '2.2.2';
+    const VERSION = '2.2.3';
 
     // ---------------------------------------------------------------
     // Fixed settings (not offered in the ♫ panel)
@@ -633,7 +633,20 @@
             $('body').removeClass('rt-ca-rt-top');
             $rt.css('width', '');
         }
-        if (phone) $rt.css('width', $('#ps-container').outerWidth() + 'px');
+        // Station name, RadioText and the phone cover box share one width:
+        // 90% of the column, as FM-DX sizes its phone panels.
+        const ps = $('#ps-container')[0];
+        if (phone) {
+            const width = ($rt.parent()[0].getBoundingClientRect().width * 0.9).toFixed(2) + 'px';
+            ps.style.setProperty('width', width, 'important');
+            ps.style.setProperty('box-sizing', 'border-box', 'important');
+            $rt.css('width', width);
+            $('#rt-coverart-container-phone').css('width', width);
+        } else {
+            ps.style.removeProperty('width');
+            ps.style.removeProperty('box-sizing');
+            $('#rt-coverart-container-phone').css('width', '');
+        }
     }
 
     // Fit the station name beside the cover in the PS panel. Sized for the
