@@ -1,9 +1,9 @@
 /* global $ */
-// RadioText Cover Art — front-end (v2.1)
+// RadioText Cover Art — front-end (v2.2)
 
 (function () {
 
-    const VERSION = '2.1';
+    const VERSION = '2.2';
 
     // ---------------------------------------------------------------
     // Fixed settings (not offered in the ♫ panel)
@@ -410,6 +410,29 @@
                     #rt-coverart-container-desktop .rt-coverart-menu-btn { top: 12px; right: 12px; }
                 }
 
+                /* Phones: RadioText moved up under the station name (placePhoneRt) */
+                @media only screen and (max-width: 768px) {
+                    .rt-ca-rt-top #rt-container {
+                        margin: 12px auto 0 auto !important;
+                        padding: 6px 12px;
+                        box-sizing: border-box;
+                        min-height: 0;
+                        background-color: var(--color-1-transparent);
+                        backdrop-filter: blur(5px);
+                    }
+                    .rt-ca-rt-top #rt-container.rt-ca-rt-empty { display: none !important; }
+                    .rt-ca-rt-top #rt-container h2 { display: none; }
+                    .rt-ca-rt-top #data-rt0, .rt-ca-rt-top #data-rt1 {
+                        font-size: 14px;
+                        line-height: 1.35;
+                        white-space: normal;
+                        overflow-wrap: anywhere;
+                        overflow: visible;
+                        text-align: center;
+                        padding: 2px 0;
+                    }
+                }
+
                 /* Inside the RadioText or PS panel */
                 .rt-ca-host { position: relative; box-sizing: border-box; }
                 #rt-coverart-inline {
@@ -586,6 +609,51 @@
         $('.rt-ca-host').removeClass('rt-ca-host').css({ 'padding-left': '', 'padding-right': '' });
         resetDesktopStyles();
         $('body').removeClass('rt-ca-mode-af rt-ca-mode-rt rt-ca-mode-ps rt-ca-mode-float rt-ca-no-hover');
+        placePhoneRt();
+        fitPs();
+    }
+
+    // FM-DX puts RadioText on phones below the transmitter panel, where the
+    // fixed player bar covers it. While narrow, move it up under the station
+    // name; a hidden marker keeps its original spot for wider screens.
+    let $rtMarker = $();
+    function placePhoneRt() {
+        const $rt = $('#rt-container');
+        const $psRow = $('#ps-container').closest('.flex-container');
+        if (!$rt.length || !$psRow.length) return;
+        const phone = settings.enabled && window.innerWidth <= 768;
+        if (phone && !$rtMarker.length) {
+            $rtMarker = $('<span hidden></span>').insertBefore($rt);
+            $psRow.after($rt);
+            $('body').addClass('rt-ca-rt-top');
+        } else if (!phone && $rtMarker.length) {
+            $rtMarker.replaceWith($rt);
+            $rtMarker = $();
+            $('body').removeClass('rt-ca-rt-top');
+            $rt.css('width', '');
+        }
+        if (phone) $rt.css('width', $('#ps-container').outerWidth() + 'px');
+    }
+
+    // Fit the station name beside the cover in the PS panel. Sized for the
+    // full 8 characters, so the font doesn't jump while a scrolling PS changes.
+    let fitCanvas = null;
+    function fitPs() {
+        const $ps = $('#data-ps');
+        const $host = $('#ps-container');
+        if (!$ps.length) return;
+        $ps.css({ 'font-size': '', 'white-space': '' });
+        if (!settings.enabled || settings.placement !== 'ps' || !$host.hasClass('rt-ca-host')) return;
+        const cs = getComputedStyle($ps[0]);
+        const hs = getComputedStyle($host[0]);
+        fitCanvas = fitCanvas || document.createElement('canvas');
+        const ctx = fitCanvas.getContext('2d');
+        ctx.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+        const need = ctx.measureText('MMMMMMMM').width + 8 * (parseFloat(cs.letterSpacing) || 0);
+        const avail = $host[0].clientWidth - parseFloat(hs.paddingLeft) - parseFloat(hs.paddingRight) - 8;
+        const css = { 'white-space': 'nowrap' };
+        if (need > avail && avail > 0) css['font-size'] = Math.floor(parseFloat(cs.fontSize) * avail / need) + 'px';
+        $ps.css(css);
     }
 
     // Returns false while the page's panels aren't in the DOM yet.
@@ -668,6 +736,7 @@
 
     function layout() {
         const mode = settings.placement;
+        placePhoneRt();
         if (mode === 'af') {
             matchDesktopHeights();
         } else if (mode === 'rt' || mode === 'ps') {
@@ -695,6 +764,7 @@
             'padding-left': settings.side === 'left' ? pad : '',
             'padding-right': settings.side === 'right' ? pad : ''
         });
+        fitPs();
     }
 
     function resetDesktopStyles() {
@@ -1473,6 +1543,10 @@
 
             if (typeof parsedData.rt0 === 'undefined' && typeof parsedData.rt1 === 'undefined' &&
                 typeof parsedData.freq === 'undefined' && typeof parsedData.ps === 'undefined') return;
+            if (typeof parsedData.rt0 !== 'undefined' || typeof parsedData.rt1 !== 'undefined') {
+                $('#rt-container').toggleClass('rt-ca-rt-empty',
+                    !String(parsedData.rt0 || '').trim() && !String(parsedData.rt1 || '').trim());
+            }
             handleParsedData(parsedData);
         });
     }
@@ -1488,6 +1562,8 @@
             if (!createPlacement()) setTimeout(place, 250);
             else setTimeout(layout, 1000);
         })();
+        // The PS font (Roboto Mono) may arrive after the first fit.
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layout(); });
 
         $(window).on('resize orientationchange', function () {
             clearTimeout(resizeTimer);
