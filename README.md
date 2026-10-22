@@ -89,7 +89,7 @@ listener (per-station settings stay personal).
    ```
    (`README.md` doesn't need to be copied — it's just documentation.)
 4. Start the webserver. You should see a console line like:
-   `Plugin RadioText Cover Art 2.2.3 initialized successfully.`
+   `Plugin RadioText Cover Art 2.2.4 initialized successfully.`
 5. Make sure it's enabled under admin **Settings → Plugins**.
 6. Restart the webserver once more (server-side scripts load at startup)
    and reload the page in your browser (Ctrl+F5).
@@ -140,6 +140,11 @@ Disable it in **Settings → Plugins**, stop the server, then delete
 `plugins/`. You can also delete `plugins_configs/radiotext-coverart.json`.
 
 ## Changelog
+
+**2.2.4**
+- Phones: PI code, frequency and signal sit in one panel with the same width
+  and look as the station name and RadioText panels.
+- Phones: the same 24px gap under every panel, the cover box included.
 
 **2.2.3**
 - Phones: station name, RadioText and the cover box share one width (90% of

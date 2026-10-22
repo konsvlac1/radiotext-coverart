@@ -1,9 +1,9 @@
 /* global $ */
-// RadioText Cover Art — front-end (v2.2.3)
+// RadioText Cover Art — front-end (v2.2.4)
 
 (function () {
 
-    const VERSION = '2.2.3';
+    const VERSION = '2.2.4';
 
     // ---------------------------------------------------------------
     // Fixed settings (not offered in the ♫ panel)
@@ -421,7 +421,15 @@
                         background-color: var(--color-1-transparent) !important;
                         backdrop-filter: blur(5px) !important;
                     }
+                    .rt-ca-rt-top .rt-ca-phone-panel {
+                        margin: 0 auto 24px auto !important;
+                        padding-top: 14px;
+                        box-sizing: border-box;
+                        background-color: var(--color-1-transparent) !important;
+                        backdrop-filter: blur(5px) !important;
+                    }
                     .rt-ca-rt-top #rt-container.rt-ca-rt-empty { display: none !important; }
+                    .rt-ca-rt-top #rt-coverart-container-phone { margin-bottom: 24px; }
                     .rt-ca-rt-top #rt-container h2, .rt-ca-rt-top #rt-container > hr { display: none; }
                     .rt-ca-rt-top #data-rt0, .rt-ca-rt-top #data-rt1 {
                         font-size: 14px;
@@ -633,19 +641,24 @@
             $('body').removeClass('rt-ca-rt-top');
             $rt.css('width', '');
         }
-        // Station name, RadioText and the phone cover box share one width:
-        // 90% of the column, as FM-DX sizes its phone panels.
+        // Station name, RadioText, the phone cover box and the PI / frequency /
+        // signal group share one width: 90% of the column, as FM-DX sizes its
+        // phone panels. The group gets a panel of its own, shaped like the
+        // station name's.
         const ps = $('#ps-container')[0];
+        const $readout = $('#pi-code-container').parent();
         if (phone) {
             const width = ($rt.parent()[0].getBoundingClientRect().width * 0.9).toFixed(2) + 'px';
             ps.style.setProperty('width', width, 'important');
             ps.style.setProperty('box-sizing', 'border-box', 'important');
             $rt.css('width', width);
             $('#rt-coverart-container-phone').css('width', width);
+            $readout.addClass('rt-ca-phone-panel').css({ width: width, 'border-radius': getComputedStyle(ps).borderRadius });
         } else {
             ps.style.removeProperty('width');
             ps.style.removeProperty('box-sizing');
             $('#rt-coverart-container-phone').css('width', '');
+            $readout.removeClass('rt-ca-phone-panel').css({ width: '', 'border-radius': '' });
         }
     }
 
