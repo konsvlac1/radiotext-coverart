@@ -1,9 +1,9 @@
 /* global $ */
-// RadioText Cover Art — front-end (v2.2.1)
+// RadioText Cover Art — front-end (v2.2.2)
 
 (function () {
 
-    const VERSION = '2.2.1';
+    const VERSION = '2.2.2';
 
     // ---------------------------------------------------------------
     // Fixed settings (not offered in the ♫ panel)
@@ -417,8 +417,9 @@
                         padding: 6px 12px;
                         box-sizing: border-box;
                         min-height: 0;
-                        background-color: var(--color-1-transparent);
-                        backdrop-filter: blur(5px);
+                        /* !important: themes clear .no-bg-phone panels the same way */
+                        background-color: var(--color-1-transparent) !important;
+                        backdrop-filter: blur(5px) !important;
                     }
                     .rt-ca-rt-top #rt-container.rt-ca-rt-empty { display: none !important; }
                     .rt-ca-rt-top #rt-container h2, .rt-ca-rt-top #rt-container > hr { display: none; }
@@ -426,7 +427,7 @@
                         font-size: 14px;
                         line-height: 1.35;
                         white-space: normal;
-                        overflow-wrap: anywhere;
+                        overflow-wrap: break-word;
                         overflow: visible;
                         text-align: center;
                         padding: 2px 0;
