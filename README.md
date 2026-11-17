@@ -1,5 +1,7 @@
 # RadioText Cover Art — Plugin for FM-DX-Webserver
 
+🇬🇷 [Οδηγίες στα ελληνικά](README.el.md)
+
 Shows cover art for the song that's currently playing, detected from the
 station's RDS data. A default picture is shown whenever no song is
 identified.
